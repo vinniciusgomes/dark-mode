@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Switch from "react-switch";
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "./styles/theme";
 
-function App() {
+import { Container, Title, Subtitle, User, SwitchButton } from "./styles";
+
+function Example() {
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    if (theme === "light") {
+      localStorage.setItem("theme", "dark");
+      setTheme("dark");
+    } else {
+      localStorage.setItem("theme", "light");
+      setTheme("light");
+    }
+  };
+
+  useEffect(() => {
+    const localTheme = localStorage.getItem("theme");
+    localTheme && setTheme(localTheme);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+      <Container>
+        <Title>{theme} mode</Title>
+        <SwitchButton onClick={() => toggleTheme()}>
+          {theme === "dark" ? (
+            <img src="./assets/sun.svg" />
+          ) : (
+            <img src="./assets/moon.svg" />
+          )}
+        </SwitchButton>
+        <Subtitle className="mt-4">
+          by:
+          <User
+            href="https://github.com/vinniciusgomes"
+            target="_blank"
+            className="ml-2"
+          >
+            @vinniciusgomes
+          </User>
+        </Subtitle>
+      </Container>
+    </ThemeProvider>
   );
 }
 
-export default App;
+export default Example;
